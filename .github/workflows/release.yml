@@ -36,7 +36,7 @@ jobs:
             wget https://dl.google.com/go/go1.22.0.freebsd-amd64.tar.gz && tar -C /usr/local -xzf go1.22.0.freebsd-amd64.tar.gz && rm go1.22.0.freebsd-amd64.tar.gz
             ln -s /usr/local/go/bin/go /usr/local/bin/go
           run: |
-            CGO_ENABLED=0 GOOS=freebsd GOARCH=amd64 go build -o xui-release -v main.go
+            CGO_ENABLED=1 GOOS=freebsd GOARCH=amd64 go build -o xui-release -v main.go
             mkdir x-ui
             cp xui-release x-ui/xui-release
             cp x-ui.service x-ui/x-ui.service
