@@ -27,30 +27,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: goto-bus-stop/setup-zig@v2
-      - name: Set up Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: 1.18
       - name: build freedbsd amd64 version
-        run: |
-          CGO_ENABLED=0 GOOS=freebsd GOARCH=amd64 CC="zig cc -target x86_64-linux-freebsd" CXX="zig c++ -target x86_64-linux-freebsd" go build -o xui-release -v main.go
-          mkdir x-ui
-          cp xui-release x-ui/xui-release
-          cp x-ui.service x-ui/x-ui.service
-          cp x-ui.sh x-ui/x-ui.sh
-          cd x-ui
-          mv xui-release x-ui
-          mkdir bin
-          cd bin
-          wget https://github.com/XTLS/Xray-core/releases/latest/download/Xray-freebsd-64.zip
-          unzip Xray-freebsd-64.zip
-          rm -f Xray-freebsd-64.zip geoip.dat geosite.dat
-          wget https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat
-          wget https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat
-          mv xray xray-freebsd-amd64
-          cd ..
-          cd ..
+        uses: vmactions/freebsd-vm@v1
+        with:
+          prepare: |
+            pkg install -y wget curl git gcc bash gawk gsed
+            wget https://dl.google.com/go/go1.22.0.freebsd-amd64.tar.gz && tar -C /usr/local -xzf go1.22.0.freebsd-amd64.tar.gz && rm go1.22.0.freebsd-amd64.tar.gz
+            ln -s /usr/local/go/bin/go /usr/local/bin/go
+          run: |
+            CGO_ENABLED=0 GOOS=freebsd GOARCH=amd64 go build -o xui-release -v main.go
+            mkdir x-ui
+            cp xui-release x-ui/xui-release
+            cp x-ui.service x-ui/x-ui.service
+            cp x-ui.sh x-ui/x-ui.sh
+            cd x-ui
+            mv xui-release x-ui
+            mkdir bin
+            cd bin
+            wget https://github.com/XTLS/Xray-core/releases/latest/download/Xray-freebsd-64.zip
+            unzip Xray-freebsd-64.zip
+            rm -f Xray-freebsd-64.zip geoip.dat geosite.dat
+            wget https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat
+            wget https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat
+            mv xray xray-freebsd-amd64
+            cd ..
+            cd ..
       - name: package
         run: tar -zcvf x-ui-freebsd-amd64.tar.gz x-ui
       - name: upload
