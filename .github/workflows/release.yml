@@ -34,7 +34,7 @@ jobs:
           go-version: 1.18
       - name: build freedbsd amd64 version
         run: |
-          CGO_ENABLED=0 GOOS=freebsd GOARCH=amd64 CC="zig cc -target x86_64-linux-freebsd" CXX="zig c++ -target x86_64-linux-freebsd" go build -o xui-release -v main.go
+          CGO_ENABLED=1 GOOS=freebsd GOARCH=amd64 CC="zig cc -target x86_64-linux-freebsd" CXX="zig c++ -target x86_64-linux-freebsd" go build -o xui-release -v main.go
           mkdir x-ui
           cp xui-release x-ui/xui-release
           cp x-ui.service x-ui/x-ui.service
