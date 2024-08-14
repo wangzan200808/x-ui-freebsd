@@ -30,6 +30,7 @@ jobs:
       - name: build freedbsd amd64 version
         uses: vmactions/freebsd-vm@v1
         with:
+          usesh: true
           prepare: |
             pkg install -y wget curl git gcc bash gawk gsed
             wget https://dl.google.com/go/go1.22.0.freebsd-amd64.tar.gz && tar -C /usr/local -xzf go1.22.0.freebsd-amd64.tar.gz && rm go1.22.0.freebsd-amd64.tar.gz
