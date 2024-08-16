@@ -1,4 +1,4 @@
-module x-ui-freebsd
+module x-ui
 
 go 1.21.4
 
